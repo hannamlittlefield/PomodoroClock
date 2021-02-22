@@ -1,14 +1,23 @@
 import React, { useState } from 'react';
 
 export default function Length(){
- const [lengthDisplay, setLengthDisplay] = useState('25')
+ const [lengthDisplay, setLengthDisplay] = useState(25)
 
  function handleOnDec(){
-    setLengthDisplay(lengthDisplay - '1')
- }
+     if(lengthDisplay >=2){
+        setLengthDisplay(lengthDisplay - 1)
+    }
+    else{
+    }
+}
 
  function handleOnInc(){
-    setLengthDisplay(lengthDisplay + '1')
+     if(lengthDisplay <= 59){
+    setLengthDisplay(lengthDisplay + 1)
+     }
+     else{
+         
+     }
 }
 
     return(
