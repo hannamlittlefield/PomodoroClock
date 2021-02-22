@@ -1,14 +1,21 @@
 import React, { useState } from 'react';
 
 export default function Break() {
-    const [breakDisplay, setBreakDisplay] = useState('5')
+    const [breakDisplay, setBreakDisplay] = useState(5)
 
     function handleOnDec(){
-        setBreakDisplay(breakDisplay - 1)
+        if(breakDisplay >= 2){
+            setBreakDisplay(breakDisplay - 1)}
+        else{
+        }
     }
 
     function handleOnInc(){
-        setBreakDisplay(breakDisplay + 1)
+        if(breakDisplay <=59){
+            setBreakDisplay(breakDisplay + 1)
+        }   
+        else{
+        }
 
     }
     
