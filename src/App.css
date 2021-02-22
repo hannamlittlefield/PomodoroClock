@@ -5,7 +5,7 @@
 
 .title{
   font-family: 'Bebas Neue', cursive;
-  color: #686868;
+  color: #F97068;
   position: fixed;
   top: 0;
   border: dotted 5px #457EAC;
@@ -28,7 +28,7 @@
   font-family: 'Noto Sans JP', sans-serif;
   font-size: 30px;
   color: #457EAC;
-  border: dashed 3px #686868;
+  border: dashed 3px #F97068;
   padding: 0px 15px 0px 15px;
 }
 
@@ -36,9 +36,34 @@
   font-family: 'Noto Sans JP', sans-serif;
   font-size: 30px;
   color: #457EAC;
-  border: dashed 3px #686868;
+  border: dashed 3px #F97068;
   padding: 0px 15px 0px 15px;
 }
+
+#break-decrement{
+  background-color: #F97068;
+  font-size: 20px;
+  margin: 5px;
+}
+
+#break-increment{
+  background-color: #F97068;
+  font-size: 20px;
+  margin: 5px;
+}
+
+#session-increment{
+  background-color: #F97068;
+  font-size: 20px;
+  margin: 5px;
+}
+
+#session-decrement{
+  background-color: #F97068;
+  font-size: 20px;
+  margin: 5px;
+}
+
 
 #timer-label{
   font-family: 'Noto Sans JP', sans-serif;
@@ -46,4 +71,16 @@
   color: #457EAC;
   border: dashed 3px #686868;
   padding: 0px 15px 0px 15px;
+}
+
+#start_stop{
+  background-color: #F97068;
+  font-size: 20px;
+  margin: 5px;
+}
+
+#reset{
+  background-color: #F97068;
+  font-size: 20px;
+  margin: 5px;
 }
