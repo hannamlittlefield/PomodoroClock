@@ -18,7 +18,7 @@ export default function Break() {
         }
 
     }
-    
+
     return(
         <div id="break-label">
             <p>Break Length</p>
