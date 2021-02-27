@@ -1,23 +1,7 @@
 import React, { useState } from 'react';
 
-export default function Length() {
-    const [lengthDisplay, setLengthDisplay] = useState(25)
-    function handleLengthOnDec(){
-        if(lengthDisplay >=2){
-           setLengthDisplay(lengthDisplay - 1)
-       }
-       else{
-       }
-   }
-   
-    function handleLengthOnInc(){
-        if(lengthDisplay <= 59){
-       setLengthDisplay(lengthDisplay + 1)
-        }
-        else{
-   
-        }
-   }
+export default function Length({handleLengthOnDec, handleLengthOnInc, lengthDisplay}) {
+
     return(
         <div id="break-label">
             <p>Session Length</p>
