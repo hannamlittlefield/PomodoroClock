@@ -1,32 +1,24 @@
 import React, {useState} from 'react'
+import Countdown from 'react-countdown';
 
-export default function SessionTimer({handleOnReset}){
+export default function SessionTimer({handleOnReset}, {breakDisplay}){
     const [sessionDisplay, setSessionDisplay] = useState("25:00")
 
     function handleStartStop(){
-        setInterval(function() {
-            var presentTime = sessionDisplay;
-            var timeArray = presentTime.split(':');
-            var m = timeArray[0];
-            var s = checkSecond(timeArray[1] - 1)
-                console.log(s)
-                if(s==="59"){m=m-1}
-        console.log(s-1)
-            document.getElementById("time-left").innerHTML=(m +":" + s)
-        /*setSessionDisplay(m +":" + s)*/
-        }, 1000
-        )
     }
-
-    function checkSecond(sec) {
-        if (sec < "10" && sec >= "0") {sec = "0" + sec};
-        if (sec < "0") {sec = "59"};
-        return sec;
-      }
 
     return(
         <div id="timer-label">
             <p>Session</p>
+            <Countdown
+                date={sessionDisplay}
+                intervalDelay={0}
+                precision={3}
+                autoStart={false}
+                onPause={sessionDisplay}
+                onComplete={breakDisplay}
+  />,
+
             <div id="time-left">{sessionDisplay}</div>
             <button 
                 id="start_stop"
