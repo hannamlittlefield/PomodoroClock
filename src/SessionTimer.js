@@ -3,21 +3,29 @@ import Countdown from 'react-countdown';
 
 export default function SessionTimer({handleOnReset}, {breakDisplay}){
     const [sessionDisplay, setSessionDisplay] = useState("25:00")
+    const [descriptionDisplay, setDescription] = useState("Session")
 
     function handleStartStop(){
     }
 
+   function handleOnComplete(){
+        if (sessionDisplay === "00:00"){
+            setSessionDisplay({breakDisplay})
+            setDescription("Break") /*changes display to state break*/
+        }
+    }
+
     return(
         <div id="timer-label">
-            <p>Session</p>
+            <p>{descriptionDisplay}</p>
             <Countdown
-                date={sessionDisplay}
+                date={Date.now()}
                 intervalDelay={0}
                 precision={3}
                 autoStart={false}
                 onPause={sessionDisplay}
-                onComplete={breakDisplay}
-  />,
+               /* onComplete={handleOnComplete} */
+  />
 
             <div id="time-left">{sessionDisplay}</div>
             <button 
