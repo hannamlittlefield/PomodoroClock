@@ -21,7 +21,6 @@ export default function App() {
   */
   const [breakDisplay, setBreakDisplay] = useState(5)
   const [lengthDisplay, setLengthDisplay] = useState(25)
-  const [sessionDisplay, setSessionDisplay] = useState(25)
 
   function handleBreakOnDec(){
       if(breakDisplay >= 2){
@@ -66,7 +65,7 @@ export default function App() {
       <h1 className="title">Productive Pomodoro</h1>
       <SessionTimer
         handleOnReset={handleOnReset}
-        sessionDisplay={sessionDisplay}
+        lengthDisplay={lengthDisplay}
         />
       <Grid
         container
