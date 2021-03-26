@@ -1,162 +1,181 @@
-import './App.css';
-import Break from './Break'
-import Length from './Length'
-import Grid from '@material-ui/core/Grid'
-import SessionTimer from './SessionTimer.js'
-import React, { useState } from 'react';
+import './App.css'
+//import Break from './Break'
+//import Length from './Length'
+//import Grid from '@material-ui/core/Grid'
+//import SessionTimer from './SessionTimer.js'
+import React, { Component } from 'react'
 
-export default function App() {
-  let countdown = 0; // variable to set/clear intervals
-  const [workTime, setWorkTime] = useState(25);
-  const [seconds, setSeconds] = useState(workTime*60)
-  const [breakTime, setBreakTime] = useState(5);
-  let isBreak = true;
-  let isPaused = true;
-  let increment = 1;
+export default class App extends Component {
+  constructor(props) {
+    super(props);
 
-  
-  const status = document.getElementById("status");
-  const timerDisplay = document.getElementById("timerDisplay");
-  const startBtn = document.getElementById("start-btn");
-  const resetBtn = document.getElementById("reset");
-  const workMin = document.getElementById("work-min");
-  const breakMin = document.getElementById("break-min");
-  
-  const alarm = document.createElement('audio'); // A bell sound will play when the timer reaches 0
-  alarm.setAttribute("src", "https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3");
-  
-  
+    this.audioBeep = React.createRef();
 
-  const handleStart = () => {
-    clearInterval(countdown);
-    isPaused = !isPaused;
-    if (!isPaused) {
-      countdown = setInterval(timer, 1000);
+    this.state = {
+      breakLength: 5,
+      sessionLength: 25,
+      timeLabel: 'Session',
+      timeLeftInSecond: 25 * 60,
+      isStart: false,
+      timerInterval: null
     }
-}
 
-  /* EVENT LISTENERS FOR START AND RESET BUTTONS */
-  /*
-  resetBtn.addEventListener('click', () => {
-    clearInterval(countdown);
-    seconds = workTime * 60;
-    countdown = 0;
-    isPaused = true;
-    isBreak = true;
-  })
-  */
-  /* TIMER - HANDLES COUNTDOWN */
-  function timer() {
-    setSeconds(seconds - 1);
+    this.onIncreaseBreak = this.onIncreaseBreak.bind(this);
+    this.onDecreaseBreak = this.onDecreaseBreak.bind(this);
+    this.onIncreaseSession = this.onIncreaseSession.bind(this);
+    this.onDecreaseSession = this.onDecreaseSession.bind(this);
+    this.onReset = this.onReset.bind(this);
+    this.onStartStop = this.onStartStop.bind(this);
+    this.decreaseTimer = this.decreaseTimer.bind(this);
+    this.phaseControl = this.phaseControl.bind(this);
+  }
 
-      if (seconds < 0) {
-        clearInterval(countdown);
-        alarm.currentTime = 0;
-        alarm.play();
-        seconds = (isBreak ? breakTime : workTime) * 60;
-        isBreak = !isBreak;
-        countdown = setInterval(timer, 1000);
+  onIncreaseBreak() {
+    if (this.state.breakLength < 60 && !this.state.isStart) {
+      this.setState({
+        breakLength: this.state.breakLength + 1
+      });
     }
-    countdownDisplay();
-    console.log(seconds)
-  }
-  
-  function incrementBreak(){
-    setBreakTime(breakTime + 1)
-    // TODO userstories to limit breaktime >0
   }
 
-  function decrementBreak(){
-    setBreakTime(breakTime - 1)
-    // TODO userstories to limit breaktime >0
+  onDecreaseBreak() {
+    if (this.state.breakLength > 1 && !this.state.isStart) {
+      this.setState({
+        breakLength: this.state.breakLength - 1
+      });
+    }
   }
 
-  function incrementWork(){
-    setWorkTime(workTime + 1)
-    setSeconds(workTime*60)
-    // TODO userstories to limit breaktime <60
+  onIncreaseSession() {
+    if (this.state.sessionLength < 60 && !this.state.isStart) {
+      this.setState({
+        sessionLength: this.state.sessionLength + 1,
+        timeLeftInSecond: (this.state.sessionLength + 1) * 60
+      });
+    }
   }
 
-  function decrementWork(){
-    setWorkTime(workTime - 1)
-    setSeconds(workTime*60)
-    // TODO userstories to limit breaktime <60
+  onDecreaseSession() {
+    if (this.state.sessionLength > 1 && !this.state.isStart) {
+      this.setState({
+        sessionLength: this.state.sessionLength - 1,
+        timeLeftInSecond: (this.state.sessionLength - 1) * 60
+      });
+    }
   }
 
-  /* UPDATE HTML CONTENT */
-  function countdownDisplay() {
-    console.log(document.getElementById("timerDisplay").innerText)
-    let minutes = Math.floor(seconds / 60);
-    let remainderSeconds = seconds % 60;
-    if (timerDisplay != null) timerDisplay.innerText = `${minutes}:${remainderSeconds < 10 ? '0' : ''}${remainderSeconds}`;
+  onReset() {
+    this.setState({
+      breakLength: 5,
+      sessionLength: 25,
+      timeLabel: 'Session',
+      timeLeftInSecond: 25 * 60,
+      isStart: false,
+      timerInterval: null
+    });
+
+    this.audioBeep.current.pause();
+    this.audioBeep.current.currentTime = 0;
+    this.state.timerInterval && clearInterval(this.state.timerInterval);
   }
-  
-  function buttonDisplay() {
-    if (isPaused && countdown === 0) {
-      startBtn.innerText = "START";
-    } else if (isPaused && countdown !== 0) {
-      startBtn.innerText = "Continue"; 
+
+  onStartStop() {
+    if (!this.state.isStart) {
+      this.setState({
+        isStart: !this.state.isStart,
+        timerInterval: setInterval(() => {
+          this.decreaseTimer();
+          this.phaseControl();
+        }, 1000)
+      })
     } else {
-      startBtn.innerText = "Pause";
+      this.audioBeep.current.pause();
+      this.audioBeep.current.currentTime = 0;
+      this.state.timerInterval && clearInterval(this.state.timerInterval);
+
+      this.setState({
+        isStart: !this.state.isStart,
+        timerInterval: null
+      });
     }
   }
-  
-  function updateHTML() {
-    countdownDisplay();
-    /*buttonDisplay();
-    isBreak ? status.innerText = "Keep Working" : status.innerText = "Take a Break!";
-    workMin.innerText = workTime;
-    breakMin.innerText = breakTime;  */
+
+  decreaseTimer() {
+    this.setState({
+      timeLeftInSecond: this.state.timeLeftInSecond - 1
+    });
   }
-  
-  window.setInterval(updateHTML, 100);
-  
-  document.onclick = updateHTML;
 
-  return (
-    <div className="container">
-      <h1>Pomodoro Timer</h1>
-      
-      <div id="pomodoro">  
-        <div id="status"></div>
-        <div id="timerDisplay">{workTime}:00</div>
-        <button 
-          id="start-btn" 
-          className="btn"
-          onClick={handleStart}
-          >START</button>
-      </div>
-      
-      <div className="settings">
-        <div id="work">
-          <p>Work Duration</p>
-          <button 
-            className="btn-settings" 
-            id="work-plus" 
-            onClick={incrementWork}>+</button>
-          <div><span id="work-min">{workTime}</span> mins</div>
-          <button 
-            className="btn-settings" 
-            id="work-minus"
-            onClick={decrementWork}>-</button>
+  phaseControl() {
+    if (this.state.timeLeftInSecond === 0) {
+      this.audioBeep.current.play();
+    } else if (this.state.timeLeftInSecond === -1) {
+      if (this.state.timeLabel === 'Session') {
+        this.setState({
+          timeLabel: 'Break',
+          timeLeftInSecond: this.state.breakLength * 60
+        });
+      } else {
+        this.setState({
+          timeLabel: 'Session',
+          timeLeftInSecond: this.state.sessionLength * 60
+        });
+      }
+    }
+  }
+
+  formatTime = (timeLeftInSecond) => {
+    let minute = Math.floor(timeLeftInSecond / 60);
+    if (minute < 10) minute = '0' + minute;
+  
+    let second = timeLeftInSecond - 60 * minute;
+    if (second < 10) second = '0' + second;
+  
+    return `${minute}:${second}`;
+  }
+
+  render() {
+    return (
+      <div className="pomodoro-clock">
+        <div className="pomodoro-clock-header">
+          <h1 className="pomodoro-clock-header-name">pomodoro clock</h1>
         </div>
-        
-        <button id="reset" className="btn">RESET</button>
-        
-        <div id="break">
-          <p>Break Duration</p>
-          <button 
-            className="btn-settings" 
-            id="break-plus"
-            onClick={incrementBreak}>+</button>
-          <div><span id="break-min">{breakTime}</span> mins</div>
-          <button 
-            className="btn-settings" 
-            id="break-minus"
-            onClick={decrementBreak}>-</button>
+
+        <div className="settings">
+          <div className="settings-section">
+            <label id="break-label">Break Length</label>
+            <div>
+              <button id="break-decrement" onClick={this.onDecreaseBreak}>-</button>
+              <span id="break-length">{this.state.breakLength}</span>
+              <button id="break-increment" onClick={this.onIncreaseBreak}>+</button>
+            </div>
+          </div>
+          <div className="settings-section">
+            <label id="session-label">Session Length</label>
+            <div>
+              <button id="session-decrement" onClick={this.onDecreaseSession}>-</button>
+              <span id="session-length">{this.state.sessionLength}</span>
+              <button id="session-increment" onClick={this.onIncreaseSession}>+</button>
+            </div>
+          </div>
         </div>
+
+        <div className="times">
+          <div className="times-content">
+            <label id="timer-label">{this.state.timeLabel}</label>
+            <span id="time-left">{this.formatTime(this.state.timeLeftInSecond)}</span>
+          </div>
+        </div>
+
+        <div className="controller">
+          <button id="start_stop" onClick={this.onStartStop}>
+            {this.state.isStart ? 'Stop' : 'Start'}
+          </button>
+          <button id="reset" onClick={this.onReset}>Reset</button>
+        </div>
+
+        <audio id="beep" preload="auto" src="" ref={this.audioBeep}></audio>
       </div>
-    </div>
-  );
+    );
+  }
 }
-
