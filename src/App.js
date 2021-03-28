@@ -138,7 +138,7 @@ export default class App extends Component {
     return (
       <div className="pomodoro-clock">
         <div className="pomodoro-clock-header">
-          <h1 className="pomodoro-clock-header-name">pomodoro clock</h1>
+          <h1 className="pomodoro-clock-header-name">Pomodoro Clock</h1>
         </div>
 
         <div className="settings">
@@ -174,7 +174,7 @@ export default class App extends Component {
           <button id="reset" onClick={this.onReset}>Reset</button>
         </div>
 
-        <audio id="beep" preload="auto" src="" ref={this.audioBeep}></audio>
+        <audio id="beep" preload="auto" src="https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav" ref={this.audioBeep}></audio>
       </div>
     );
   }
